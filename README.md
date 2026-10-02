@@ -1,3 +1,15 @@
+## Login aplikasi (pembaruan)
+
+Aplikasi memiliki halaman `/login` dan tombol **Keluar**. Username pengurus yang diminta adalah `Hendrawan.81`. Password tidak disimpan di source publik. Jalankan `npm run auth:setup` untuk membuat hash password dan rahasia sesi di `.env.local` (file ini tidak diunggah ke GitHub).
+
+Di Vercel, isi variabel privat `KARIER_ADMIN_USER`, `KARIER_ADMIN_PASSWORD_HASH`, `KARIER_SESSION_SECRET`, dan `DATABASE_URL`. Salin tiga nilai login dari `.env.local` secara privat. Hash memakai scrypt dengan salt acak. Sesi ditandatangani, berlaku 8 jam, dan memakai cookie HttpOnly/SameSite Strict/Secure pada HTTPS. Mengganti rahasia sesi membatalkan sesi lama. Tidak ada akun/password bawaan di source.
+
+Repository hanya menyimpan source dan skema. Untuk memindahkan transaksi warga, gunakan `database/snapshot.json` atau `database/restore-data.sql` dari ZIP migrasi pribadi dan impor ke database Neon kosong. Kedua file data dikecualikan dari GitHub. Website membutuhkan database yang sudah diimpor; build GitHub yang sukses bukan deployment website.
+
+Petunjuk HTTP Basic dan `KARIER_ADMIN_PASSWORD` pada panduan lama di bawah telah diganti oleh halaman login dan tiga variabel di atas. Password setup minimal 12 karakter. Saat ini hanya ada satu akun pengurus bersama, tanpa pembatasan akses per warga. Pembatasan percobaan login terpusat belum tersedia.
+
+---
+
 # KARIER — Paket migrasi GitHub + Vercel + Neon
 
 Paket ini mempertahankan **seluruh UI aplikasi Sites KARIER**: tema hijau/emas, logo,

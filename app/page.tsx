@@ -155,7 +155,7 @@ export default function HomePage(){
   <aside className={`sidebar ${menu?"is-open":""}`}>
    <div className="brand"><div className="brand-icon"><img src="/karier-logo.svg" alt="Logo KARIER" width="48" height="48"/></div><div><strong>KARIER</strong><span>Kas Rutin Irene Residence</span></div><button className="mobile-close" onClick={()=>setMenu(false)} aria-label="Tutup menu"><X size={20}/></button></div>
    <p className="sidebar-caption">PENGELOLAAN</p>
-   <nav aria-label="Menu utama">{navigation.map(([key,label,icon])=><button key={key} className={`nav-button ${tab===key?"active":""}`} onClick={()=>{setTab(key);setMenu(false)}}>{icon}{label}</button>)}</nav>
+   <nav aria-label="Menu utama">{navigation.map(([key,label,icon])=><button key={key} className={`nav-button ${tab===key?"active":""}`} onClick={()=>{setTab(key);setMenu(false)}}>{icon}{label}</button>)}<button className="nav-button" onClick={async()=>{const r=await fetch("/api/auth/logout",{method:"POST"});if(r.ok)window.location.assign("/login")}}>Keluar</button></nav>
    <div className="sidebar-foot"><span>Tarif iuran tetap</span><strong>Rp5.000 <small>/ bulan</small></strong><p>Uang muka dialokasikan saat bulannya tiba.</p></div>
   </aside>
   {menu&&<button className="mobile-overlay" aria-label="Tutup menu" onClick={()=>setMenu(false)}/>}

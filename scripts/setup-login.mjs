@@ -1,0 +1,11 @@
+import { scryptSync, randomBytes } from 'node:crypto';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { createInterface } from 'node:readline/promises';
+const rl=createInterface({input:process.stdin,output:process.stdout});
+const username=(await rl.question('Username: ')).trim();
+console.log('Password tidak ditampilkan. Ketik password lalu Enter.');
+rl.close();
+const password=await new Promise(resolve=>{let value='';const raw=process.stdin.isTTY;if(raw)process.stdin.setRawMode(true);process.stdin.resume();process.stdin.on('data',function handler(chunk){for(const c of chunk.toString()){if(c==='\r'||c==='\n'){process.stdin.off('data',handler);if(raw)process.stdin.setRawMode(false);process.stdin.pause();resolve(value);return;}if(c==='\u0003')process.exit(1);if(c==='\u007f'||c==='\b')value=value.slice(0,-1);else value+=c;}});});
+if(!username||password.length<12||password.length>256)throw Error('Username wajib diisi; password 12–256 karakter.');
+const salt=randomBytes(16).toString('hex');const fields={KARIER_ADMIN_USER:username,KARIER_ADMIN_PASSWORD_HASH:salt+':'+scryptSync(password,salt,64).toString('hex'),KARIER_SESSION_SECRET:randomBytes(32).toString('hex')};
+let text=existsSync('.env.local')?readFileSync('.env.local','utf8'):readFileSync('.env.example','utf8');for(const [key,value] of Object.entries(fields)){const pattern=new RegExp('^'+key+'=.*$','m');text=pattern.test(text)?text.replace(pattern,key+'='+value):text+'\n'+key+'='+value;}writeFileSync('.env.local',text,{mode:0o600});console.log('Login disimpan di .env.local. Masukkan ketiga variabel login ke Vercel secara privat.');
